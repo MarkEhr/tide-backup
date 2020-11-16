@@ -1,0 +1,27 @@
+{
+  "destination": "/home/user/Documents/backups",
+  "logFile": "/home/user/Documents/backup.log",
+  "heartbeat": {
+    "url": "https://betteruptime.com/heartbeat_id",
+    "method": "GET"
+  },
+  "projects":[
+    {
+      "name": "test",
+      "host": "user@example.com",
+
+      "folders": [
+        "project/user-uploads",
+        "Pictures/backgrounds"
+      ],
+
+      "databases": [{
+        "name": "dbName",
+        "user": "theUser",
+        "password": "thePass"
+      }],
+
+      "remoteTempFolder": "/tmp"
+    }
+  ]
+}
