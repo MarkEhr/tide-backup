@@ -14,15 +14,19 @@ const {log, dateString} = require("./util");
  */
 const downloadFolder = ( host, folder, destination )=>{
 
-    const backupName = (folder+'').replace(/\//g,'_')+'-'+dateString()+'.tar';
+    const backupName = (folder+'').replace(/\//g,'_')+'-'+dateString()+'.tar.gz';
 
     if(!fs.existsSync(destination))
         fs.mkdirSync(destination, {recursive: true});
 
-    const tarCommand = [ '"tar -cpf - -C', dirname(folder), basename(folder)+'"'];
+    const tarCommand = [ '"tar -czpf - -C', dirname(folder), basename(folder)+'"'];
     const command = ["ssh", host, tarCommand.join(" "), '>', '"'+join(destination, backupName)+'"' ];
 
     return execSync(command.join(" "));
+}
+
+const escapePassword = (pass)=>{
+    return (pass+"").replace('`','\\`');
 }
 
 /**
@@ -45,11 +49,9 @@ const downloadDatabases = (host, databases, destination, remoteTempFolder="/tmp"
     let success = true;
     for (let i=0; i<databases.length; i++){
         try {
-            const file = join(folder, `${databases[i].name}.sql`);
-            const dumpCommand = ['mysqldump', '--no-tablespaces ', '--quick', `\\"-u${databases[i].user}\\"`, `\\"-p${databases[i].password}\\"`, databases[i].name, ' >', file];
+            const file = join(folder, `${databases[i].name}.sql.gz`);
+            const dumpCommand = [`MYSQL_PWD='${escapePassword(databases[i].password)}'`, 'mysqldump', '--no-tablespaces ', '--quick', `'-u${databases[i].user}'`, databases[i].name, '| gzip >', file];
             const command = ["ssh", host, `"${dumpCommand.join(' ')}"`];
-
-            console.log(command.join(" "));
             execSync(command.join(" "));
         } catch (e){
             log("Error dumping database "+databases[i].name+" : "+e, "error");

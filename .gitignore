@@ -1,3 +1,4 @@
 .idea
 backup.log
 config.json
+deploy.sh

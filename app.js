@@ -25,6 +25,9 @@ const run = async ()=> {
             log("Heartbeat parameters: " + JSON.stringify(config.heartbeat), "error");
         }
     }
+    else if(config.heartbeat){
+        log("Not all backups succeed. Preventing heartbeat");
+    }
 
 
 }

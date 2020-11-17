@@ -25,8 +25,9 @@ const dateString = ( dateParam )=>{
         zeroPad(date.getSeconds());
 }
 const log = ( msg, type="info" )=>{
-    console.log(msg);
-    fs.appendFileSync(logStream.file, '['+dateString()+'] ['+pad(type, 6)+'] '+ msg + "\n");
+    const formatted = '['+dateString()+'] ['+pad(type, 6)+'] '+ msg;
+    console.log(formatted);
+    fs.appendFileSync(logStream.file, formatted+"\n");
 }
 
 module.exports = {
