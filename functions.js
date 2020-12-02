@@ -98,6 +98,26 @@ const downloadProject = async ( project, destination )=>{
     return success;
 }
 
+const cleanOldBackups = ( project, destination )=>{
+    const folder = join(destination, project.name);
+    if(!fs.existsSync(folder))
+        throw new Error("Couldn't find folder while cleaning up oldies: "+folder);
+    const backups = fs.readdirSync(folder);
+    const backupCount = project.backupCount || 3;
+    if(backupCount === -1)
+        return;
+    backups.sort();
+    for(let i=0; i<backupCount; i++)
+        backups.pop();
+    if(!backups.length)
+        return;
+    log(`Removing ${backups.length} old backups`);
+    for(let i=0; i<backups.length; i++){
+        const bkFolder = join(folder, backups[i]);
+        execSync(`rm -rf "${bkFolder}"`);
+    }
+}
+
 /**
  *
  * @param options {{
@@ -131,6 +151,7 @@ const heartbeatCall = async ( options )=>{
 }
 
 module.exports = {
+    cleanOldBackups,
     downloadFolder,
     downloadProject,
     heartbeatCall,

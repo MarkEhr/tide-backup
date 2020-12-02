@@ -17,6 +17,7 @@ A configuration json is required with the following parameters:
 |projects      | Array of projects to back up sequentially 
 |projects[].name | The project name used for naming backups
 |projects[].host | The ssh host including the user like "user@example.com" from where the backups will be made
+|projects[].backupCount | Number of backups to save. All backups exceeding this number will be deleted counting after downloading the backup.
 |projects[].folders| Array of folders to download, each will be `tar`ed, `gzip`ed and downloaded. Specify the full path either from root or from the ssh users home.
 |projects[].databases| Array of objects specifying the database details for downloading.
 |projects[].databases[].name| The database name
